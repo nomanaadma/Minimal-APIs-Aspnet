@@ -1,10 +1,8 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using Library.Api.Auth;
 using Library.Api.Endpoints.Internal;
 using Library.Api.Models;
 using Library.Api.Services;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Library.Api.Endpoints;
 
@@ -127,8 +125,8 @@ public class LibraryEndpoints : IEndpoints
 		return deleted ? Results.NoContent() : Results.NotFound();
 	}
 
-	public static void AddServices(IServiceCollection services, IConfiguration configuration)
-	{
-		services.AddSingleton<IBookService, BookService>();
-	}
+	// public static void AddServices(IServiceCollection services, IConfiguration configuration)
+	// {
+	// 	services.AddSingleton<IBookService, BookService>();
+	// }
 }

@@ -22,9 +22,10 @@ builder.Services.AddSingleton<IDbConnectionFactory>(_ =>
 	new SqlliteConnectionFactory(config["Database:ConnectionString"]!));
 builder.Services.AddSingleton<DbInitializer>();
 
-builder.Services.AddEndpoints<Program>(builder.Configuration);
+//builder.Services.AddEndpoints<Program>(builder.Configuration);
 
 builder.Services.AddSingleton<IBookService, BookService>();
+
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddAuthentication(ApiKeySchemeConstants.SchemeName)
 	.AddScheme<ApiKeyAuthSchemeOptions, ApiKeyAuthHandler>(ApiKeySchemeConstants.SchemeName, _ => { });
@@ -40,7 +41,9 @@ app.UseSwaggerUI();
 
 app.UseAuthorization();
 
-app.UseEndpoints<Program>();
+// app.UseEndpoints<Program>();
+
+app.UseEndpoints();
 
 app.MapGet("status", [EnableCors("AnyOrigin")]() => Results.Extensions.Html("""
 <!doctype html>
