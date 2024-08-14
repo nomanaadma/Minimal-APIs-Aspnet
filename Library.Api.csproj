@@ -14,4 +14,26 @@
       <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Library.Api.Tests.Integration\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Library.Api.Tests.Integration\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="Library.Api.Tests.Integration\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Library.Api.Tests.Integration\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Library.Api.Tests.Integration\obj\Library.Api.Tests.Integration.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="Library.Api.Tests.Integration\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="Library.Api.Tests.Integration\obj\project.packagespec.json" />
+    </ItemGroup>
+
 </Project>
