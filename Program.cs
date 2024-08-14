@@ -16,6 +16,8 @@ builder.Services.AddCors(options =>
 	options.AddPolicy("AnyOrigin", x => x.AllowAnyOrigin());
 });
 
+// builder.Services.AddHealthChecks();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IDbConnectionFactory>(_ =>
@@ -45,6 +47,7 @@ app.UseAuthorization();
 
 app.UseEndpoints();
 
+// app.MapHealthChecks("/_health");
 app.MapGet("status", [EnableCors("AnyOrigin")]() => Results.Extensions.Html("""
 <!doctype html>
 <html>

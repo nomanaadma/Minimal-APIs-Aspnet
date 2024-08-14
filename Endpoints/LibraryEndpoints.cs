@@ -68,7 +68,7 @@ public class LibraryEndpoints : IEndpoints
 		{
 			return Results.BadRequest(new List<ValidationFailure>
 			{
-				new("Isbn", " A book with this ISBN-13 already exists")
+				new("Isbn", "A book with this ISBN-13 already exists")
 			});
 		}
 
