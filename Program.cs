@@ -1,3 +1,5 @@
+using FluentValidation;
+using FluentValidation.Results;
 using Library.Api.Data;
 using Library.Api.Models;
 using Library.Api.Services;
@@ -12,21 +14,32 @@ builder.Services.AddSingleton<IDbConnectionFactory>(_ =>
 	new SqlliteConnectionFactory(config["Database:ConnectionString"]!));
 builder.Services.AddSingleton<DbInitializer>();
 builder.Services.AddSingleton<IBookService, BookService>();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapPost("books", async (Book book, IBookService bookService) =>
+app.MapPost("books", async (Book book, 
+	IBookService bookService,
+	IValidator<Book> validator
+	) =>
 {
+
+	var validationResult = await validator.ValidateAsync(book);
+	if (!validationResult.IsValid)
+	{
+		return Results.BadRequest(validationResult.Errors);
+	}
+	
 	var created = await bookService.CreateAsync(book);
 
 	if (!created)
 	{
-		return Results.BadRequest(new
+		return Results.BadRequest( new List<ValidationFailure>
 		{
-			errorMessage = "A book with this ISBN-13 already exists"
+			new("Isbn"," A book with this ISBN-13 already exists")
 		});
 	}
 
