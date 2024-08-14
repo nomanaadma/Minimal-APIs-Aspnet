@@ -1,6 +1,6 @@
 ﻿namespace Library.Api.Models;
 
-public class Books
+public class Book
 {
 	public string Isbn { get; set; } = default!;
 	
