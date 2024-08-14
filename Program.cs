@@ -1,10 +1,11 @@
 using System.Diagnostics.SymbolStore;
 using FluentValidation;
 using FluentValidation.Results;
+using Library.Api.Auth;
 using Library.Api.Data;
 using Library.Api.Models;
 using Library.Api.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -16,11 +17,17 @@ builder.Services.AddSingleton<IDbConnectionFactory>(_ =>
 builder.Services.AddSingleton<DbInitializer>();
 builder.Services.AddSingleton<IBookService, BookService>();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+builder.Services.AddAuthentication(ApiKeySchemeConstants.SchemeName)
+	.AddScheme<ApiKeyAuthSchemeOptions, ApiKeyAuthHandler>(ApiKeySchemeConstants.SchemeName, _ => { });
+builder.Services.AddAuthorization();
+
 
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseAuthorization();
 
 app.MapPost("books", async (Book book, 
 	IBookService bookService,
@@ -48,19 +55,24 @@ app.MapPost("books", async (Book book,
 
 });
 
-app.MapGet("books", async (IBookService bookService, string? searchTerm) =>
-{
-	
-	IEnumerable<Book> books;
-	
-	if (searchTerm is not null && !string.IsNullOrEmpty(searchTerm))
-		books = await bookService.SearchByTitleAsync(searchTerm);
-	else 
-		books = await bookService.GetAllAsync();
-		
-	return Results.Ok(books);
-	
-});
+
+app.MapGet("books",
+	// [Authorize(AuthenticationSchemes = ApiKeySchemeConstants.SchemeName)]
+	// [AllowAnonymous]
+	async (IBookService bookService, string? searchTerm) =>
+	{
+
+		IEnumerable<Book> books;
+
+		if (searchTerm is not null && !string.IsNullOrEmpty(searchTerm))
+			books = await bookService.SearchByTitleAsync(searchTerm);
+		else
+			books = await bookService.GetAllAsync();
+
+		return Results.Ok(books);
+
+	});
+//.AllowAnonymous()
 
 app.MapGet("books/{isbn}", async (string isbn,  IBookService bookService) =>
 {
