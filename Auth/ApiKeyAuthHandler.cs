@@ -10,8 +10,8 @@ public class ApiKeyAuthHandler : AuthenticationHandler<ApiKeyAuthSchemeOptions>
 {
     public ApiKeyAuthHandler(
         IOptionsMonitor<ApiKeyAuthSchemeOptions> options,
-        ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
-        : base(options, logger, encoder, clock)
+        ILoggerFactory logger, UrlEncoder encoder)
+        : base(options, logger, encoder)
     {
     }
 
